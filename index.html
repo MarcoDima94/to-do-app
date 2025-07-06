@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1A1B41">
+    
+    <title>ToDo App</title>
+    
+    <link rel="manifest" href="manifest.json">
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div id="home-view" class="view active">
+        <div class="selection-container">
+            <h1>ToDo App ✨</h1>
+            <div class="button-container">
+                <div class="svg-btn" data-target="lavoro-view">
+                    <svg viewBox="0 0 280 75">
+                        <rect class="button-shape" x="2.5" y="2.5" width="275" height="70" rx="12" />
+                        <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">🏢 Lavoro</text>
+                    </svg>
+                </div>
+                <div class="svg-btn" data-target="casa-view">
+                    <svg viewBox="0 0 280 75">
+                        <rect class="button-shape" x="2.5" y="2.5" width="275" height="70" rx="12" />
+                        <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">🏠 Casa</text>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="lavoro-view" class="view">
+        <header>
+            <button class="back-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </button>
+            <h1>Attività Lavoro 💼</h1>
+        </header>
+        <div class="app-content">
+            <form id="lavoro-form" class="task-form">
+                <input type="text" placeholder="Nuova attività di lavoro..." required>
+                <button type="submit">Aggiungi ➕</button>
+            </form>
+            <ul id="lavoro-list" class="task-list"></ul>
+        </div>
+    </div>
+    <div id="casa-view" class="view">
+        <header>
+            <button class="back-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </button>
+            <h1>Attività Casa 🏡</h1>
+        </header>
+        <div class="app-content">
+            <form id="casa-form" class="task-form">
+                <input type="text" placeholder="Nuova attività di casa..." required>
+                <button type="submit">Aggiungi ➕</button>
+            </form>
+            <ul id="casa-list" class="task-list"></ul>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('Service Worker registrato con successo:', registration);
+                    })
+                    .catch(error => {
+                        console.log('Registrazione del Service Worker fallita:', error);
+                    });
+            });
+        }
+    </script>
+
+</body>
+</html>
