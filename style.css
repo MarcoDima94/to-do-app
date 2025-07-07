@@ -1,115 +1,275 @@
-/* Stili Generali e Gestione Viste */
+/* === SETUP E VARIABILI === */
 :root {
-    --dark-blue: #1A1B41;
-    --lime-green: #BAFF29;
+    --petrol-darkest: #012a36;
+    --petrol-dark: #004a5a;
+    --petrol-medium: #007a8a;
+    --petrol-light: #00a9b8;
+    --accent-cyan: #1ee3cf;
+    --text-primary: #f0f5f5;
+    --text-secondary: #a0c5cf;
+    --background-gradient: linear-gradient(160deg, var(--petrol-dark), var(--petrol-darkest));
+    --shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
-    font-family: 'Inter', sans-serif;
-    background: linear-gradient(135deg, #2c2e58, #1a1b41);
-    color: #f0f2f5;
+    font-family: 'Manrope', sans-serif;
+    background: var(--background-gradient);
+    color: var(--text-primary);
     margin: 0;
-    padding: 20px;
     min-height: 100vh;
-    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
 }
 
-.view { display: none; }
+/* === GESTIONE VISTE E TRANSIZIONI === */
+.view {
+    display: none;
+    padding: 20px;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    overflow-y: auto;
+    background: var(--background-gradient);
+}
+
 .view.active {
     display: block;
-    animation: fadeIn 0.5s ease-in-out;
+    animation: slideIn 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
+
+.view.exiting {
+    animation: slideOut 0.4s cubic-bezier(0.5, 0, 0.75, 0) forwards;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0%); }
+}
+
+@keyframes slideOut {
+    from { transform: translateX(0%); }
+    to { transform: translateX(-100%); }
+}
+
+#home-view.exiting { animation: none; } 
+#home-view.active { animation: fadeIn 0.5s ease-in-out; }
+
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
-/* Stili Schermata Iniziale */
-#home-view .selection-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 80vh;
+/* === LAYOUT HOMEPAGE === */
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 20px;
+    padding: 20px;
+    height: 100%;
+    align-content: center;
 }
-#home-view h1 {
-    color: var(--lime-green);
-    font-size: 3rem;
-    font-weight: 700;
-}
-.button-container {
+.category-btn {
+    background: var(--petrol-dark);
+    border-radius: 20px;
+    padding: 25px 15px;
     display: flex;
     flex-direction: column;
-    gap: 25px;
-    width: 100%;
-    max-width: 280px;
-}
-
-/* Stili Pulsanti SVG Animati */
-.svg-btn {
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
     cursor: pointer;
+    border: 1px solid var(--petrol-medium);
+    transition: transform 0.2s ease, background-color 0.2s ease;
+    box-shadow: var(--shadow);
+}
+.category-btn:active {
+    transform: scale(0.95);
+    background-color: var(--petrol-medium);
+}
+.category-btn svg {
+    color: var(--accent-cyan);
+    transition: transform 0.3s ease;
+}
+.category-btn:hover svg {
+    transform: scale(1.1);
+}
+.category-btn span {
+    color: var(--text-secondary);
+    font-weight: 600;
 }
 
-.button-shape {
-    fill: var(--dark-blue);
-    stroke: rgba(255, 255, 255, 0.1); /* Bordo di base, quasi invisibile */
-    stroke-width: 5;
-    rx: 12;
+/* === STILI PAGINE INTERNE === */
+.view-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
 }
-
-.svg-btn text {
-    fill: white;
-    font-size: 20px;
-    font-weight: 700;
-    font-family: 'Inter', sans-serif;
+.view-header h1 {
+    font-size: 1.8rem;
+    color: var(--accent-cyan);
+    margin: 0;
 }
-
-.svg-btn .button-shape.animating-stroke {
-    stroke: var(--lime-green);
-    /* Lunghezza totale del perimetro del rettangolo: (275+70)*2 = 690 */
-    stroke-dasharray: 690;
-    stroke-dashoffset: 690;
-    animation: draw-border 1s linear forwards;
+.back-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--accent-cyan);
+    padding: 5px;
 }
+.back-btn svg { width: 32px; height: 32px; }
 
-@keyframes draw-border {
-    to {
-        stroke-dashoffset: 0;
-    }
+/* === FORM E INPUT === */
+.task-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+    position: sticky;
+    top: 0;
+    padding: 10px 0 20px 0; /* Aggiustato il padding */
+    /* MODIFICA 1: Sfondo del form reso trasparente per essere omogeneo */
+    background: transparent;
+    z-index: 10;
+    align-items: stretch;
 }
-
-/* Stili Schermate Lavoro e Casa */
-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; color: var(--lime-green); }
-.back-btn { 
-    background: rgba(255, 255, 255, 0.1); 
-    border: none; 
-    border-radius: 50%; 
-    width: 45px; 
-    height: 45px; 
+.task-form input {
+    background-color: transparent;
+    /* MODIFICA 2: Sostituito il bordo completo con una linea inferiore */
+    border: none;
+    border-bottom: 2px solid var(--petrol-medium);
+    border-radius: 0; /* Rimosso il raggio del bordo */
+    padding: 15px 5px; /* Aggiustato il padding */
+    font-size: 1rem;
+    color: var(--text-primary);
+    font-family: 'Manrope', sans-serif;
+    flex-grow: 1;
+}
+.task-form input:focus {
+    outline: none;
+    border-bottom-color: var(--accent-cyan);
+}
+.task-form input::placeholder {
+    color: var(--text-secondary);
+}
+.task-form button.add-btn {
+    background-color: var(--accent-cyan);
+    border: none;
+    border-radius: 12px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--lime-green);
+    transition: transform 0.2s ease;
+    padding: 15px;
 }
-.back-btn svg {
-    stroke-width: 3; /* Rende l'icona più visibile */
+.add-btn:active { transform: scale(0.95); }
+.add-btn svg {
+    width: 28px;
+    height: 28px;
+    color: var(--petrol-darkest);
 }
 
-.app-content { max-width: 600px; margin: auto; background: var(--dark-blue); padding: 25px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.1); }
-.task-form { display: flex; gap: 10px; margin-bottom: 20px; }
-.task-form input { flex-grow: 1; padding: 12px; font-size: 1rem; border: 1px solid #4a4e7a; border-radius: 8px; background-color: #2c2e58; color: #fff; }
-.task-form input::placeholder { color: #aaa; }
-.task-form button { padding: 0 20px; font-size: 1rem; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; background-color: var(--lime-green); color: var(--dark-blue); }
-.task-list { padding: 0; }
-.task-list li { display: flex; justify-content: space-between; align-items: center; list-style: none; padding: 12px; margin-bottom: 8px; background-color: #2c2e58; border-radius: 6px; color: #fff; word-break: break-word; }
-.delete-btn { background: transparent; border: none; cursor: pointer; font-size: 1.2rem; color: #888; }
-.delete-btn:hover { color: #ff6b6b; }
+/* Stili specifici per il form appuntamenti */
+#appuntamenti-form { 
+    flex-direction: column; 
+}
 
-@media (max-width: 600px) {
-    body { padding: 15px; }
-    #home-view h1 { font-size: 2.5rem; }
-    .app-content { padding: 15px; }
-    header h1 { font-size: 1.5rem; }
+.input-with-icon {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background-color: transparent;
+    /* MODIFICA 2: Sostituito il bordo completo con una linea inferiore */
+    border: none;
+    border-bottom: 2px solid var(--petrol-medium);
+    border-radius: 0; /* Rimosso il raggio del bordo */
+    padding: 0;
+}
+.input-with-icon:focus-within {
+    border-bottom-color: var(--accent-cyan);
+}
+.input-with-icon svg {
+    color: var(--text-secondary);
+    flex-shrink: 0;
+    margin-left: 5px; /* Spaziatura per l'icona */
+}
+.input-with-icon input {
+    border: none;
+    padding: 15px 5px; /* Aggiustato il padding */
+}
+.input-with-icon input:focus {
+    outline: none;
+}
+
+.full-width-btn {
+    width: 100%;
+    padding: 15px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--petrol-darkest);
+    margin-top: 10px; /* Aggiunta spaziatura superiore */
+}
+
+.date-time-input {
+    color-scheme: dark;
+}
+.date-time-input.placeholder-visible {
+    color: var(--text-secondary);
+}
+
+/* === LISTA TASK/APPUNTAMENTI === */
+.task-list {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+.task-list li {
+    background-color: var(--petrol-dark);
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    word-break: break-word;
+    animation: popIn 0.3s ease-out;
+}
+@keyframes popIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}
+.appointment-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.appointment-date {
+    font-weight: 700;
+    color: var(--accent-cyan);
+}
+.appointment-text {
+    font-size: 1rem;
+    color: var(--text-primary);
+}
+
+.delete-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+}
+.delete-btn svg {
+    width: 24px;
+    height: 24px;
+    color: var(--text-secondary);
+    transition: color 0.2s;
+}
+.delete-btn:hover svg {
+    color: #ff6b6b;
 }
