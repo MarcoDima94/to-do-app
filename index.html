@@ -3,7 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="theme-color" content="#004a5a"/>
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+    
     <title>Todo App</title>
+
+    <link rel="manifest" href="manifest.json">
+    
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,8 +43,21 @@
     <div id="casa-view" class="view"></div>
     <div id="spesa-view" class="view"></div>
     <div id="appuntamenti-view" class="view"></div>
-    
+
     <script src="script.js"></script>
 
-    </body>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(registration => {
+                        console.log('PWA: Service Worker registrato con successo');
+                    })
+                    .catch(error => {
+                        console.log('PWA: Registrazione del Service Worker fallita:', error);
+                    });
+            });
+        }
+    </script>
+</body>
 </html>
