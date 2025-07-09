@@ -1,23 +1,13 @@
-{
-  "name": "Todo App",
-  "short_name": "Todo",
-  "start_url": "index.html",
-  "display": "standalone",
-  "background_color": "#012a36",
-  "theme_color": "#004a5a",
-  "description": "Una semplice app per gestire le tue attività quotidiane.",
-  "icons": [
-    {
-      "src": "icons/icon-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "icons/icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
-  ]
-}
+// Versione sicura del Service Worker ("Network Only")
+// Permette all'app di essere una PWA installabile senza i rischi della cache.
+
+self.addEventListener('install', (event) => {
+  // Salta la fase di attesa per attivare subito il service worker.
+  self.skipWaiting(); 
+});
+
+self.addEventListener('fetch', (event) => {
+  // Non fa nulla con la cache, passa semplicemente la richiesta alla rete.
+  // Questo evita qualsiasi problema di file non trovati o pagine bianche.
+  event.respondWith(fetch(event.request));
+});

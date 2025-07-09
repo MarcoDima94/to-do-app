@@ -45,7 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
             </header>
             <div class="app-content">
                 <form id="${category}-form" class="task-form">
-                    <input type="text" placeholder="${placeholder}" required>
+                    <input type="text" name="taskText" placeholder="${placeholder}" required>
+                    <input type="text" name="taskCategory" placeholder="Categoria (opzionale)..." list="${category}-categories">
+                    <datalist id="${category}-categories"></datalist>
                     <button type="submit" class="add-btn">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14m-7-7h14"></path></svg>
                     </button>
@@ -88,14 +90,67 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
     };
 
-
     // === LOGICA DI RENDER ===
+    const updateCategoryDatalists = () => {
+        ['lavoro', 'casa', 'spesa'].forEach(category => {
+            const datalist = document.getElementById(`${category}-categories`);
+            if (!datalist) return;
+
+            const uniqueCategories = new Set(
+                tasks[category]
+                    .map(task => task.category)
+                    .filter(Boolean) 
+            );
+
+            datalist.innerHTML = ''; 
+            uniqueCategories.forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat;
+                datalist.appendChild(option);
+            });
+        });
+    };
+    
     const renderTasks = () => {
         ['lavoro', 'casa', 'spesa'].forEach(category => {
             const list = document.getElementById(`${category}-list`);
             if (!list) return;
+
             list.innerHTML = '';
-            tasks[category].forEach(task => list.appendChild(createTaskElement(task, category)));
+            const tasksForCategory = tasks[category];
+
+            const groupedTasks = tasksForCategory.reduce((acc, task) => {
+                const key = task.category || '___uncategorized___';
+                if (!acc[key]) acc[key] = [];
+                acc[key].push(task);
+                return acc;
+            }, {});
+
+            const uncategorized = groupedTasks['___uncategorized___'] || [];
+            uncategorized.forEach(task => {
+                list.appendChild(createTaskElement(task, category));
+            });
+
+            Object.keys(groupedTasks).sort().forEach(groupKey => {
+                if (groupKey === '___uncategorized___') return;
+
+                const groupContainer = document.createElement('div');
+                groupContainer.className = 'category-group';
+                
+                const header = document.createElement('h3');
+                header.className = 'category-header';
+                header.textContent = groupKey;
+                groupContainer.appendChild(header);
+
+                const sublist = document.createElement('ul');
+                sublist.className = 'task-sublist';
+                groupedTasks[groupKey].forEach(task => {
+                    sublist.appendChild(createTaskElement(task, category));
+                });
+                groupContainer.appendChild(sublist);
+                
+                list.appendChild(groupContainer);
+            });
         });
 
         const apptList = document.getElementById('appuntamenti-list');
@@ -105,6 +160,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 .sort((a, b) => new Date(a.dateTime) - new Date(b.dateTime))
                 .forEach(appt => apptList.appendChild(createAppointmentElement(appt)));
         }
+        
+        updateCategoryDatalists();
     };
     
     // === CREAZIONE ELEMENTI LISTA ===
@@ -149,11 +206,23 @@ document.addEventListener('DOMContentLoaded', () => {
     // === GESTIONE EVENTI ===
     const handleSimpleTaskSubmit = (event, category) => {
         event.preventDefault();
-        const input = event.target.querySelector('input');
-        if (input.value.trim() === '') return;
+        const form = event.target;
+        const textInput = form.querySelector('input[name="taskText"]');
+        const categoryInput = form.querySelector('input[name="taskCategory"]');
+
+        const taskText = textInput.value.trim();
+        const taskCategory = categoryInput.value.trim();
+
+        if (taskText === '') return;
         
-        tasks[category].push({ id: Date.now(), text: input.value.trim() });
-        input.value = '';
+        tasks[category].push({ 
+            id: Date.now(), 
+            text: taskText,
+            category: taskCategory
+        });
+
+        textInput.value = '';
+        categoryInput.value = '';
         saveTasks();
         renderTasks();
     };

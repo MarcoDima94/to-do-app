@@ -128,23 +128,18 @@ body {
 /* === FORM E INPUT === */
 .task-form {
     display: flex;
+    flex-wrap: wrap;
     gap: 10px;
     margin-bottom: 25px;
-    position: sticky;
-    top: 0;
-    padding: 10px 0 20px 0; /* Aggiustato il padding */
-    /* MODIFICA 1: Sfondo del form reso trasparente per essere omogeneo */
-    background: transparent;
-    z-index: 10;
     align-items: stretch;
 }
+
 .task-form input {
     background-color: transparent;
-    /* MODIFICA 2: Sostituito il bordo completo con una linea inferiore */
     border: none;
     border-bottom: 2px solid var(--petrol-medium);
-    border-radius: 0; /* Rimosso il raggio del bordo */
-    padding: 15px 5px; /* Aggiustato il padding */
+    border-radius: 0;
+    padding: 15px 5px;
     font-size: 1rem;
     color: var(--text-primary);
     font-family: 'Manrope', sans-serif;
@@ -167,6 +162,7 @@ body {
     justify-content: center;
     transition: transform 0.2s ease;
     padding: 15px;
+    flex-shrink: 0;
 }
 .add-btn:active { transform: scale(0.95); }
 .add-btn svg {
@@ -178,6 +174,19 @@ body {
 /* Stili specifici per il form appuntamenti */
 #appuntamenti-form { 
     flex-direction: column; 
+    background: transparent;
+    border: none;
+}
+#appuntamenti-form .input-with-icon {
+    border-radius: 12px;
+    background: rgba(10, 48, 60, 0.75);
+    border: 1px solid rgba(0, 122, 138, 0.5);
+}
+#appuntamenti-form .input-with-icon input {
+    border: none;
+}
+#appuntamenti-form .full-width-btn {
+    margin-top: 10px;
 }
 
 .input-with-icon {
@@ -185,10 +194,9 @@ body {
     align-items: center;
     gap: 15px;
     background-color: transparent;
-    /* MODIFICA 2: Sostituito il bordo completo con una linea inferiore */
     border: none;
     border-bottom: 2px solid var(--petrol-medium);
-    border-radius: 0; /* Rimosso il raggio del bordo */
+    border-radius: 0;
     padding: 0;
 }
 .input-with-icon:focus-within {
@@ -197,11 +205,11 @@ body {
 .input-with-icon svg {
     color: var(--text-secondary);
     flex-shrink: 0;
-    margin-left: 5px; /* Spaziatura per l'icona */
+    margin-left: 15px;
 }
 .input-with-icon input {
     border: none;
-    padding: 15px 5px; /* Aggiustato il padding */
+    padding: 15px 5px;
 }
 .input-with-icon input:focus {
     outline: none;
@@ -213,7 +221,6 @@ body {
     font-size: 1rem;
     font-weight: 600;
     color: var(--petrol-darkest);
-    margin-top: 10px; /* Aggiunta spaziatura superiore */
 }
 
 .date-time-input {
@@ -272,4 +279,33 @@ body {
 }
 .delete-btn:hover svg {
     color: #ff6b6b;
+}
+
+/* Stili per i gruppi di categorie */
+.category-group {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid var(--petrol-medium);
+}
+
+.category-header {
+    margin: 0 0 15px 5px;
+    color: var(--accent-cyan);
+    font-size: 1.2rem;
+}
+
+.task-sublist {
+    padding-left: 15px;
+    list-style: none;
+    margin: 0;
+}
+
+/* Adattiamo il form per i due input su mobile */
+#lavoro-form, #casa-form, #spesa-form {
+    flex-wrap: wrap; 
+}
+
+#lavoro-form input, #casa-form input, #spesa-form input {
+    flex-basis: 48%; 
+    flex-grow: 1; 
 }
